@@ -2,26 +2,33 @@ package com.camilo.financas.Configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.beans.factory.annotation.Value;
 
+import javax.sql.DataSource;
+import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
 public class DataBaseConfiguration {
 
-   
     @Value("${spring.datasource.url}")
-    String Url;
+    private String url;
+
     @Value("${spring.datasource.username}")
-    String UserName;
+    private String username;
+
     @Value("${spring.datasource.password}")
-    String Password;
+    private String password;
+
     @Value("${spring.datasource.driver-class-name}")
-    String Driver;
+    private String driver;
+
+    @Bean
+    public DataSource dataSource() {
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setJdbcUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        dataSource.setDriverClassName(driver);
+        return dataSource;
+    }
 }
-
-
-
-
-
-

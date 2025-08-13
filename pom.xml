@@ -52,6 +52,16 @@
 		</dependency>
 	</dependencies>
 
+	
+
+
+
+	<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>42.6.0</version> 
+</dependency>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -80,5 +90,17 @@
 			</plugin>
 		</plugins>
 	</build>
+
+
+<dependency>
+
+    <groupId>com.zaxxer</groupId>
+
+    <artifactId>HikariCP</artifactId>
+
+    <version>5.1.0</version>
+
+</dependency>
+
 
 </project>
