@@ -2,6 +2,11 @@ package com.camilo.financas.Configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
+import org.apache.catalina.startup.HostConfig;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.sql.DataSource;
@@ -22,13 +27,23 @@ public class DataBaseConfiguration {
     @Value("${spring.datasource.driver-class-name}")
     private String driver;
 
-    @Bean
-    public DataSource dataSource() {
-        HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        dataSource.setDriverClassName(driver);
-        return dataSource;
-    }
+   @Bean
+    public DataSource hikariDataSource() {
+
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl(url);
+        hikariConfig.setUsername(username);
+        hikariConfig.setPassword(password);
+        hikariConfig.setDriverClassName(driver);
+
+        hikariConfig.setMaximumPoolSize(10); //maximo de conexões liberadas
+        hikariConfig.setMinimumIdle(1); // tamanho inicial do pool
+        hikariConfig.setPoolName("library-db-pool");
+        hikariConfig.setMaxLifetime(600000);// 600 mil ms (10 min)
+        hikariConfig.setConnectionTimeout(100000);// timeout para conseguir conexão
+        hikariConfig.setConnectionTestQuery("select 1");// query de teste
+
+        return new HikariDataSource(hikariConfig);
+}
+
 }
