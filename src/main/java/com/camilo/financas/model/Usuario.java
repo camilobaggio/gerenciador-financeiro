@@ -1,5 +1,6 @@
 package com.camilo.financas.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 @Entity
 @Data
+@AllArgsConstructor
 @RequiredArgsConstructor    
 public class Usuario {
 

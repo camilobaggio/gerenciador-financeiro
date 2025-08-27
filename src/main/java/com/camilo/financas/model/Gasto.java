@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -22,9 +23,9 @@ public class Gasto {
     private String descricao;
 
     @Column(name = "valor",precision = 6, scale = 2, nullable = false)
-    private Double valor;
+    private BigDecimal valor;
 
-    @Column(name = "data_gasto", nullable = false)
+    @Column(name = "data_gasto")
     private LocalDate dataGasto;
 
     @ManyToOne

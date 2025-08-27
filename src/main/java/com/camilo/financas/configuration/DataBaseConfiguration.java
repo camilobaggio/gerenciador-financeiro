@@ -1,38 +1,30 @@
-package com.camilo.financas.Configuration;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+package com.camilo.financas.configuration;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-
-import org.apache.catalina.startup.HostConfig;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
-import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
 public class DataBaseConfiguration {
-
     @Value("${spring.datasource.url}")
-    private String url;
-
+    String url;
     @Value("${spring.datasource.username}")
-    private String username;
-
+    String user;
     @Value("${spring.datasource.password}")
-    private String password;
-
+    String password;
     @Value("${spring.datasource.driver-class-name}")
-    private String driver;
+    String driver = "org.postgresql.Driver";
 
    @Bean
     public DataSource hikariDataSource() {
 
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(url);
-        hikariConfig.setUsername(username);
+        hikariConfig.setUsername(user);
         hikariConfig.setPassword(password);
         hikariConfig.setDriverClassName(driver);
 

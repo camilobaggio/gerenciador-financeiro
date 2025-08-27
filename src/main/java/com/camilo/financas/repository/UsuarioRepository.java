@@ -1,4 +1,4 @@
-package repository;
+package com.camilo.financas.repository;
 
 import com.camilo.financas.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
