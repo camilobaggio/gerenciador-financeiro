@@ -12,18 +12,22 @@ import java.util.UUID;
 @Component
 public class UsuarioValidator{
 
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioRepository repository;
 
 
 
     public UsuarioValidator(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+        this.repository = usuarioRepository;
+    }
+
+    public void validar(Usuario usuario){
+        validarEmail(usuario.getEmail(), usuario.getId());
     }
 
 
     public void validarEmail(String email, UUID id){
 
-        Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
+        Optional<Usuario> usuario = repository.findByEmail(email);
 
         if(usuario.isPresent()){
             if(id == null || !id.equals(usuario.get().getId())){

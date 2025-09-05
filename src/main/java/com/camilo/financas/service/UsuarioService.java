@@ -1,6 +1,7 @@
 package com.camilo.financas.service;
 
 import com.camilo.financas.model.Usuario;
+import com.camilo.financas.validador.UsuarioValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.camilo.financas.repository.UsuarioRepository;
@@ -14,8 +15,10 @@ import java.util.UUID;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final UsuarioValidator usuarioValidator;
 
     public void salvar (Usuario usuario) {
+        usuarioValidator.validar(usuario);
         this.usuarioRepository.save(usuario);
     }
 
