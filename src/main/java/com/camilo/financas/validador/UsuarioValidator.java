@@ -1,6 +1,7 @@
 package com.camilo.financas.validador;
 
 
+import com.camilo.financas.exceptions.EmailAlreadyExistsException;
 import com.camilo.financas.model.Usuario;
 import com.camilo.financas.repository.UsuarioRepository;
 import org.springframework.stereotype.Component;
@@ -31,7 +32,7 @@ public class UsuarioValidator{
 
         if(usuario.isPresent()){
             if(id == null || !id.equals(usuario.get().getId())){
-                throw new RuntimeException("email ja em uso!");
+                throw new EmailAlreadyExistsException("email ja em uso!");
             }
         }
     }

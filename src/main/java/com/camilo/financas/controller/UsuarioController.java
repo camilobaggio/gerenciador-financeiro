@@ -1,11 +1,14 @@
 package com.camilo.financas.controller;
 
 
+import com.camilo.financas.controller.mappers.UsuarioMapper;
+import com.camilo.financas.dto.UsuarioDTO;
 import com.camilo.financas.model.Usuario;
+import com.camilo.financas.service.UsuarioService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.camilo.financas.service.UsuarioService;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -16,44 +19,49 @@ import java.util.UUID;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
+    private final UsuarioMapper Mapper;
 
     @PostMapping
-    public ResponseEntity<Void> salvarUsuario (@RequestBody Usuario usuario){
+    public ResponseEntity<Void> salvarUsuario (@RequestBody @Valid UsuarioDTO dto){
+        Usuario usuario = Mapper.toEntity(dto);
         usuarioService.salvar(usuario);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/id")
-    public ResponseEntity<Usuario> buscaPorId (@PathVariable("id") UUID id){
-
-        return ResponseEntity.ok(usuarioService.buscaPorId(id).orElseThrow());
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioDTO> buscaPorId (@PathVariable("id") UUID id){
+       return usuarioService.buscaPorId(id)
+               .map(usuario -> {
+                   UsuarioDTO usuarioDTO = Mapper.toDTO(usuario);
+                   return ResponseEntity.ok().body(usuarioDTO);
+               }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/id")
-    public ResponseEntity<Void> deletaPorId (@PathVariable("id") UUID id){
-        usuarioService.deletar(id);
-        return  ResponseEntity.ok().build();
-    }
-
-    @PutMapping("/id")
-        public ResponseEntity<Void> atualizar (@PathVariable("id") UUID id,@RequestBody Usuario usuario){
-
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable("id") UUID id){
 
         Optional<Usuario> usuarioOptional = usuarioService.buscaPorId(id);
-        if(usuarioOptional.isEmpty()){
+
+        if (usuarioOptional.isEmpty()){
             return ResponseEntity.notFound().build();
         }
 
-        var usuarioBuscado = usuarioOptional.get();
+        usuarioService.deletar(id);
+        return  ResponseEntity.noContent().build();
+    }
 
-        usuarioBuscado.setNome(usuario.getNome());
-        usuarioBuscado.setEmail(usuario.getEmail());
-        usuarioBuscado.setSenha(usuario.getSenha());
-
-        usuarioService.atualizar(usuarioBuscado);
-        return ResponseEntity.ok().build();
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> atualizar(@PathVariable UUID id, @RequestBody @Valid UsuarioDTO dto) {
+        return usuarioService.buscaPorId(id)
+                .map(usuario -> {
+                    usuario.setNome(dto.nome());
+                    usuario.setEmail(dto.email());
+                    usuario.setSenha(dto.senha());
+                    usuarioService.atualizar(usuario);
+                    return ResponseEntity.ok().<Void>build();
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
 
 }
