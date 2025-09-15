@@ -3,6 +3,7 @@ package com.camilo.financas.controller;
 
 import com.camilo.financas.controller.mappers.UsuarioMapper;
 import com.camilo.financas.dto.UsuarioDTO;
+import com.camilo.financas.dto.UsuarioResponseDTO;
 import com.camilo.financas.model.Usuario;
 import com.camilo.financas.service.UsuarioService;
 import jakarta.validation.Valid;
@@ -29,11 +30,11 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> buscaPorId (@PathVariable("id") UUID id){
+    public ResponseEntity<UsuarioResponseDTO> buscaPorId (@PathVariable("id") UUID id){
        return usuarioService.buscaPorId(id)
                .map(usuario -> {
-                   UsuarioDTO usuarioDTO = Mapper.toDTO(usuario);
-                   return ResponseEntity.ok().body(usuarioDTO);
+                   UsuarioResponseDTO usuarioResponseDTO = Mapper.toResponseDTO(usuario);
+                   return ResponseEntity.ok().body(usuarioResponseDTO);
                }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
