@@ -2,6 +2,7 @@ package com.camilo.financas.model;
 
 
 import jakarta.persistence.*;
+import lombok.Cleanup;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -19,8 +20,13 @@ public class Gasto {
     @Column(name = "id")
     private UUID uuid;
 
-    @Column(name = "descricao", length = (150), nullable = false)
+    @Column(name = "descrição")
     private String descricao;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_gasto",nullable = false)
+    private GastoTipo gastoTipo;
+
 
     @Column(name = "valor",precision = 6, scale = 2, nullable = false)
     private BigDecimal valor;

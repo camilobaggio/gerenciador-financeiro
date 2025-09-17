@@ -14,7 +14,7 @@ public class GastoValidator {
 
     private final UsuarioRepository usuarioRepository;
 
-    private void validarGasto(Gasto gasto) {
+    public void validarGasto(Gasto gasto) {
 
 
         verificandoValorPositivo(gasto);

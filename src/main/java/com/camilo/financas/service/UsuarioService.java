@@ -1,5 +1,6 @@
 package com.camilo.financas.service;
 
+import com.camilo.financas.exceptions.EmailAlreadyExistsException;
 import com.camilo.financas.exceptions.ResourceNotFoundException;
 import com.camilo.financas.model.Usuario;
 import com.camilo.financas.repository.UsuarioRepository;
@@ -37,7 +38,12 @@ public class UsuarioService {
             throw new ResourceNotFoundException("usuario não encontrado");
         }
 
-        usuarioRepository.deleteById(id);
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
+
+        if (!usuario.getGastos().isEmpty()) {
+            throw new EmailAlreadyExistsException("email ja em uso!");
+        }
+
     }
 
     public void atualizar(Usuario usuario) {
