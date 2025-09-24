@@ -13,9 +13,9 @@ public class GastoService {
 
     private final GastoRepository repository;
 
-    private GastoValidator validator;
+    private final GastoValidator validator;
 
-    private Gasto salvar(Gasto gasto) {
+    public Gasto salvar(Gasto gasto) {
 
         validator.validarGasto(gasto);
         return repository.save(gasto);

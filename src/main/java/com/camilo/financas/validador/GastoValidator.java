@@ -1,8 +1,10 @@
 package com.camilo.financas.validador;
 
+import com.camilo.financas.exceptions.CampoInvalidoException;
 import com.camilo.financas.model.Gasto;
 import com.camilo.financas.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,38 +12,42 @@ import java.time.LocalDate;
 
 
 @RequiredArgsConstructor
+@Component
 public class GastoValidator {
 
     private final UsuarioRepository usuarioRepository;
 
     public void validarGasto(Gasto gasto) {
 
+        if (!validarValorPositivo(gasto)) {
+            throw new CampoInvalidoException("Value must be greater than zero.");
+        }
 
-        verificandoValorPositivo(gasto);
+        if (!validarUsuarioExistente(gasto)) {
+            throw new CampoInvalidoException("User not found or not informed.");
+        }
 
-        validarDataGasto(gasto);
-
-        validarSeUsuarioExiste(gasto);
-
-        usuarioRepository.findById(gasto.getUsuario().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
-    }
-
-    private static void validarSeUsuarioExiste(Gasto gasto) {
-        if (gasto.getUsuario() == null || gasto.getUsuario().getId() == null) {
-            throw new IllegalArgumentException("Usuário é obrigatório.");
+        if (!validarData(gasto)) {
+            throw new CampoInvalidoException("Expenditure date cannot be in the future.");
         }
     }
 
-    private static void validarDataGasto(Gasto gasto) {
+
+    public boolean validarValorPositivo(Gasto gasto) {
+        return gasto.getValor() != null && gasto.getValor().compareTo(BigDecimal.ZERO) > 0;
+    }
+
+
+    public boolean validarUsuarioExistente(Gasto gasto) {
+        if (gasto.getUsuario() == null || gasto.getUsuario().getId() == null) {
+            return false;
+        }
+        return usuarioRepository.findById(gasto.getUsuario().getId()).isPresent();
+    }
+
+    public boolean validarData(Gasto gasto) {
         if (gasto.getDataGasto() == null) {
             gasto.setDataGasto(LocalDate.now());
-        }
-    }
-
-    private static void verificandoValorPositivo(Gasto gasto) {
-        if (gasto.getValor() == null || gasto.getValor().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Valor deve ser maior que zero.");
-        }
-    }
+            return true;}
+        return !gasto.getDataGasto().isAfter(LocalDate.now());}
 }

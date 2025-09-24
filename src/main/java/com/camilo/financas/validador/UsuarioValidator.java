@@ -1,12 +1,11 @@
 package com.camilo.financas.validador;
 
 
-import com.camilo.financas.exceptions.EmailAlreadyExistsException;
+import com.camilo.financas.exceptions.registroDuplicadoException;
 import com.camilo.financas.model.Usuario;
 import com.camilo.financas.repository.UsuarioRepository;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -22,19 +21,16 @@ public class UsuarioValidator{
     }
 
     public void validar(Usuario usuario){
-        validarEmail(usuario.getEmail(), usuario.getId());
+        if(validarEmail(usuario.getEmail(), usuario.getId())){
+            throw new registroDuplicadoException("email ja em uso");
+        }
     }
 
 
-    public void validarEmail(String email, UUID id){
-
-        Optional<Usuario> usuario = repository.findByEmail(email);
-
-        if(usuario.isPresent()){
-            if(id == null || !id.equals(usuario.get().getId())){
-                throw new EmailAlreadyExistsException("email ja em uso!");
-            }
-        }
+    public boolean validarEmail(String email, UUID id) {
+        return repository.findByEmail(email)
+                .map(u -> id == null || !id.equals(u.getId()))
+                .orElse(false);
     }
 
 }

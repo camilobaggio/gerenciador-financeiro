@@ -2,7 +2,6 @@ package com.camilo.financas.model;
 
 
 import jakarta.persistence.*;
-import lombok.Cleanup;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +19,7 @@ public class Gasto {
     @Column(name = "id")
     private UUID uuid;
 
-    @Column(name = "descrição")
+    @Column(name = "descricao")
     private String descricao;
 
     @Enumerated(EnumType.STRING)
