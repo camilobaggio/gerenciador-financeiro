@@ -33,19 +33,19 @@ public class GastoValidator {
     }
 
 
-    public boolean validarValorPositivo(Gasto gasto) {
+    private boolean validarValorPositivo(Gasto gasto) {
         return gasto.getValor() != null && gasto.getValor().compareTo(BigDecimal.ZERO) > 0;
     }
 
 
-    public boolean validarUsuarioExistente(Gasto gasto) {
+    private boolean validarUsuarioExistente(Gasto gasto) {
         if (gasto.getUsuario() == null || gasto.getUsuario().getId() == null) {
             return false;
         }
         return usuarioRepository.findById(gasto.getUsuario().getId()).isPresent();
     }
 
-    public boolean validarData(Gasto gasto) {
+    private boolean validarData(Gasto gasto) {
         if (gasto.getDataGasto() == null) {
             gasto.setDataGasto(LocalDate.now());
             return true;}

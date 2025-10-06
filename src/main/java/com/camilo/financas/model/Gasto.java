@@ -23,7 +23,7 @@ public class Gasto {
     private String descricao;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_gasto",nullable = false)
+    @Column(name = "gasto_tipo",nullable = false)
     private GastoTipo gastoTipo;
 
 
@@ -34,6 +34,6 @@ public class Gasto {
     private LocalDate dataGasto;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 }
