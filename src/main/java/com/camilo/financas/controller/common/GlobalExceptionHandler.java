@@ -1,9 +1,9 @@
 package com.camilo.financas.controller.common;
 
-import com.camilo.financas.controller.common.ErroResposta;
+import com.camilo.financas.dto.ErroCampo;
+import com.camilo.financas.dto.ErroResposta;
 import com.camilo.financas.exceptions.CampoInvalidoException;
-import com.camilo.financas.controller.common.ErroCampo;
-import com.camilo.financas.exceptions.OperacaoNaoPermitida;
+import com.camilo.financas.exceptions.OperacaoNaoPermitidaException;
 import com.camilo.financas.exceptions.RegistroDuplicadoException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -40,9 +40,9 @@ public class GlobalExceptionHandler {
         return ErroResposta.conflito(e.getMessage());
     }
 
-    @ExceptionHandler(OperacaoNaoPermitida.class)
+    @ExceptionHandler(OperacaoNaoPermitidaException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErroResposta handleOperacaoNaoPermitidaException(OperacaoNaoPermitida e){
+    public ErroResposta handleOperacaoNaoPermitidaException(OperacaoNaoPermitidaException e){
         return ErroResposta.respostaPadrao(e.getMessage());
     }
 

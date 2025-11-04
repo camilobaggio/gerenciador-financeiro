@@ -1,10 +1,7 @@
-package com.camilo.financas.model;
+package com.camilo.financas.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
-
-import lombok.RequiredArgsConstructor;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,9 +16,10 @@ import java.util.UUID;
 
 
 @Entity
-@Data
 @AllArgsConstructor
-@RequiredArgsConstructor    
+@NoArgsConstructor
+@Data
+@ToString(exclude = "gastos")
 public class Usuario {
 
     @Id
@@ -29,15 +27,16 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "nome", length = 100, nullable = false)
+    @Column(name = "nome", length =(100),nullable = false)
     private String nome;
 
-    @Column(name = "email", length = 250, nullable = false, unique = true)
+    @Column(name = "email",nullable = false,length =(250), unique = true)
     private String email;
 
-    @Column(name = "senha", length = 250, nullable = false)
+    @Column(name = "senha",length =(128), nullable = false)
     private String senha;
 
-   @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario")
     private List<Gasto> gastos;
+
 }

@@ -1,13 +1,11 @@
 package com.camilo.financas.dto;
 
-import com.camilo.financas.model.Gasto;
-
-import java.util.List;
+import java.util.UUID;
 
 public record UsuarioResponseDTO(
+
+        UUID id,
         String nome,
         String email
-
-
 ) {
 }

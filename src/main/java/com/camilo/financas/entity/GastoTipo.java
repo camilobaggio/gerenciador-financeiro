@@ -1,4 +1,4 @@
-package com.camilo.financas.model;
+package com.camilo.financas.entity;
 
 public enum GastoTipo {
 

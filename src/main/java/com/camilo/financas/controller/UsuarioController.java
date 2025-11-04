@@ -1,68 +1,62 @@
 package com.camilo.financas.controller;
 
 
-import com.camilo.financas.controller.mappers.UsuarioMapper;
+import com.camilo.financas.dto.GastoSimplesDTO;
 import com.camilo.financas.dto.UsuarioDTO;
 import com.camilo.financas.dto.UsuarioResponseDTO;
-import com.camilo.financas.model.Usuario;
 import com.camilo.financas.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/usuarios")
 @RequiredArgsConstructor
-public class UsuarioController {
+public class UsuarioController implements GenericController {
 
     private final UsuarioService usuarioService;
-    private final UsuarioMapper Mapper;
+
 
     @PostMapping
-    public ResponseEntity<Void> salvarUsuario (@RequestBody @Valid UsuarioDTO dto){
-        Usuario usuario = Mapper.toEntity(dto);
-        usuarioService.salvar(usuario);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> salvarUsuario(@RequestBody @Valid UsuarioDTO dto){
+
+        UsuarioResponseDTO usuarioResponseDTO = usuarioService.salvar(dto);
+        URI location = gerarHeaderLocation(usuarioResponseDTO.id());
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDTO> buscaPorId (@PathVariable("id") UUID id){
-       return usuarioService.buscaPorId(id)
-               .map(usuario -> {
-                   UsuarioResponseDTO usuarioResponseDTO = Mapper.toResponseDTO(usuario);
-                   return ResponseEntity.ok().body(usuarioResponseDTO);
-               }).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<UsuarioResponseDTO> buscarPorId(@PathVariable("id") UUID id){
+
+        UsuarioResponseDTO usuarioResponseDTO = usuarioService.buscarPorId(id);
+        return ResponseEntity.ok(usuarioResponseDTO);
+
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UsuarioResponseDTO> atualizar(@PathVariable UUID id, @RequestBody @Valid UsuarioDTO dto) {
+
+        UsuarioResponseDTO usuarioResponseDTO = usuarioService.atualizar(id,dto);
+        return ResponseEntity.ok(usuarioResponseDTO);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable("id") UUID id){
 
-        Optional<Usuario> usuarioOptional = usuarioService.buscaPorId(id);
-
-        if (usuarioOptional.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }
-
         usuarioService.deletar(id);
-        return  ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> atualizar(@PathVariable UUID id, @RequestBody @Valid UsuarioDTO dto) {
-        return usuarioService.buscaPorId(id)
-                .map(usuario -> {
-                    usuario.setNome(dto.nome());
-                    usuario.setEmail(dto.email());
-                    usuario.setSenha(dto.senha());
-                    usuarioService.atualizar(usuario);
-                    return ResponseEntity.ok().<Void>build();
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+    @GetMapping("/email/{email}")
+    public ResponseEntity<List<GastoSimplesDTO>> listarGastosPorEmail(@PathVariable String email) {
 
+        List<GastoSimplesDTO>  gastos = usuarioService.listarGastosPorEmail(email);
+        return ResponseEntity.ok(gastos);
+    }
 
 }

@@ -1,16 +1,27 @@
 package com.camilo.financas.repository;
 
-import com.camilo.financas.model.Usuario;
+import com.camilo.financas.entity.Gasto;
+import com.camilo.financas.entity.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+
 public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
-    boolean existsByEmail(String email);
 
     Optional<Usuario> findByEmail(String email);
 
+    @Query("""
+    SELECT g
+    FROM Gasto g
+    JOIN g.usuario u
+    WHERE u.email = :email
+    ORDER BY g.dataGasto DESC
+    """)
+    List<Gasto> listarGastosPorEmail(@Param("email") String email);
 
-    boolean existsByGasto(String gasto);
 }
